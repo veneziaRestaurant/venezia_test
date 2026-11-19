@@ -3,15 +3,15 @@ rem ============================================================================
 rem  Venezia Admin - Einrichtung auf einem NEUEN PC (einmalig).
 rem  Diese eine Datei herunterladen und doppelklicken. Sie:
 rem   1. installiert Git und Node.js (falls noetig, per winget)
-rem   2. laedt das Projekt nach  %USERPROFILE%\Venezia-Admin
+rem   2. laedt das Projekt nach  %USERPROFILE%\Venezia-Admin-Test
 rem   3. legt das Desktop-Symbol "Venezia Admin" an und startet die Admin-Seite
-rem  Download: https://github.com/veneziaRestaurant/venezia/raw/main/Venezia-Admin-Einrichten.cmd
+rem  Download: https://github.com/veneziaRestaurant/venezia_test/raw/main/Venezia-Admin-Einrichten.cmd
 rem ============================================================================
 setlocal EnableExtensions
 chcp 65001 >nul
 title Venezia Admin - Einrichtung
-set "REPO=https://github.com/veneziaRestaurant/venezia.git"
-set "DEST=%USERPROFILE%\Venezia-Admin"
+set "REPO=https://github.com/veneziaRestaurant/venezia_test.git"
+set "DEST=%USERPROFILE%\Venezia-Admin-Test"
 
 echo.
 echo   =============================================

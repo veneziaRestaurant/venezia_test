@@ -1,3 +1,7 @@
+# Venezia – TESTVERSION (AR-Ansicht)
+
+> **Test-Repo.** Live: https://veneziarestaurant.github.io/venezia_test/ – die echte Seite liegt in `veneziaRestaurant/venezia`.
+
 # Venezia – Webseite & digitale Speisekarte
 
 Statische, sehr schnelle Webseite (gehostet auf **GitHub Pages**) mit Speisekarte (DE/EN/NL), Suche, Filtern, Allergenen und
@@ -11,7 +15,7 @@ Tischreservierung per WhatsApp. Gepflegt wird über eine Admin-Oberfläche **ohn
 > Das kleine schwarze Fenster offen lassen, solange gearbeitet wird; zum Beenden einfach schließen.
 
 ### Admin auf einem neuen PC einrichten (einmalig)
-1. Datei herunterladen: https://github.com/veneziaRestaurant/venezia/raw/main/Venezia-Admin-Einrichten.cmd
+1. Datei herunterladen: https://github.com/veneziaRestaurant/venezia_test/raw/main/Venezia-Admin-Einrichten.cmd
 2. Doppelklicken. Falls Windows warnt („Der Computer wurde durch Windows geschützt“): **Weitere Informationen → Trotzdem ausführen**.
 3. Git und Node.js werden automatisch installiert (Rückfragen mit **Ja** bestätigen), das Projekt landet in `C:\Users\<Name>\Venezia-Admin`.
 4. Danach liegt das Symbol **„Venezia Admin“** auf dem Desktop. Beim ersten Veröffentlichen fragt GitHub einmal nach der Anmeldung.
@@ -52,7 +56,7 @@ und richtet fehlende Programme selbst ein. Für Entwickler geht weiterhin `npm r
 1. Im Admin auf **Speichern** klicken (blauer Button oben).
 2. Unten links im Kasten **🚀 Veröffentlichen** klicken (macht automatisch `git commit` + `git push`, nur Inhalte und Bilder).
 3. Der Kasten zeigt ⏳ (Seite wird gebaut) und nach 1–3 Minuten ✅ – dann ist alles online.
-4. Live unter **https://veneziarestaurant.github.io/venezia/** (ohne Admin: `git add -A`, `git commit`, `git push`).
+4. Live unter **https://veneziarestaurant.github.io/venezia_test/** (ohne Admin: `git add -A`, `git commit`, `git push`).
 5. Bei ❌ zeigt GitHub → **Actions** eine deutsche Meldung der Inhaltsprüfung (z. B. falscher Preis).
 
 **Restaurantdaten** (Adresse, Telefon, **WhatsApp-Nummer**, Öffnungszeiten, Farben, Impressum):
@@ -147,17 +151,17 @@ Empfohlen: **Node 22 LTS** (`.nvmrc`). Node 20.11 funktioniert, zeigt aber Hinwe
 
 Die Seite wird bei jedem Push auf `main` durch `.github/workflows/deploy.yml` gebaut und veröffentlicht.
 
-1. Auf GitHub ein Repo **`venezia`** anlegen (öffentlich).
+1. Auf GitHub ein Repo **`venezia_test`** anlegen (öffentlich).
 2. Im Projektordner:
    ```bash
    git init -b main
    git add -A && git commit -m "Venezia Webseite"
-   git remote add origin https://github.com/veneziaRestaurant/venezia.git
+   git remote add origin https://github.com/veneziaRestaurant/venezia_test.git
    git push -u origin main
    ```
 3. Im Repo: **Settings → Pages → Build and deployment → Source: „GitHub Actions“** auswählen.
 4. Unter **Actions** den Lauf abwarten (grüner Haken). Danach ist die Seite unter
-   `https://veneziarestaurant.github.io/venezia/` erreichbar.
+   `https://veneziarestaurant.github.io/venezia_test/` erreichbar.
 
 **Unterpfad und Domain** ergeben sich automatisch aus `"url"` in `src/content/site.json`:
 - anderer Repo-Name → `"url": "https://veneziarestaurant.github.io/<repo-name>/"`
@@ -165,7 +169,7 @@ Die Seite wird bei jedem Push auf `main` durch `.github/workflows/deploy.yml` ge
 
 Alle internen Links laufen über `withBase()` (`src/lib/paths.ts`), funktionieren also unter jedem Unterpfad.
 Lokal (`npm run dev`/`admin`) läuft die Seite ohne Unterpfad unter `localhost:4321/`, `npm run preview`
-zeigt sie wie auf GitHub unter `localhost:4321/venezia/`.
+zeigt sie wie auf GitHub unter `localhost:4321/venezia_test/`.
 
 > Hinweis: Den QR-Code (`/qr/`) erst drucken, wenn die endgültige Adresse feststeht. Er zeigt auf `"url"`.
 
