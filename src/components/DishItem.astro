@@ -2,7 +2,7 @@
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Icon from './Icon.astro';
-import { type Dish, loc, formatPrice, dishImage, slugify } from '../lib/content';
+import { type Dish, loc, formatPrice, parsePrice, dishImage, slugify, site } from '../lib/content';
 import { ALLERGENS } from '../lib/allergens';
 import { useT, type Lang } from '../i18n/ui';
 import { existsSync } from 'node:fs';
@@ -45,6 +45,9 @@ const arSrc = dish.model3d
   ? withBase(dish.model3d)
   : !compact && ownImg && existsSync(`public${autoModel}`) ? withBase(autoModel) : undefined;
 const arIos = dish.model3dIos ? withBase(dish.model3dIos) : undefined;
+// Bestellung: „+“-Button je Preis (nicht bei ausverkauften Artikeln oder wenn im Admin abgeschaltet)
+const orderable = site.orderEnabled !== false && !dish.soldOut;
+const orderKey = (i: number) => `${categorySlug}-${slugify(dish.name)}-${i}`;
 const showSizeBadge = !compact && dish.size && prices.length === 1;
 ---
 <article
@@ -84,11 +87,27 @@ const showSizeBadge = !compact && dish.size && prices.length === 1;
     {desc && <p class="dish-desc">{desc}</p>}
 
     <div class="dish-prices">
-      {prices.map((p) => (
-        <p class="dish-price">
-          {formatPrice(p.price, lang)}<span class="cur"> €</span>
-          {(prices.length > 1 || compact) && p.size && <small>{p.size}</small>}
-        </p>
+      {prices.map((p, pi) => (
+        <div class="price-item">
+          <p class="dish-price">
+            {formatPrice(p.price, lang)}<span class="cur"> €</span>
+            {(prices.length > 1 || compact) && p.size && <small>{p.size}</small>}
+          </p>
+          {orderable && parsePrice(p.price) !== undefined && (
+            <button
+              type="button"
+              class="add-btn"
+              data-add
+              data-key={orderKey(pi)}
+              data-name={name}
+              data-name-de={dish.name}
+              data-size={p.size || undefined}
+              data-price={parsePrice(p.price)}
+              aria-label={`${name}${p.size ? ` (${p.size})` : ''}: ${t('order.add')}`}
+              title={t('order.add')}
+            ><Icon name="plus" /></button>
+          )}
+        </div>
       ))}
     </div>
 

@@ -8,8 +8,9 @@ import Sections from './Sections.astro';
 import Footer from './Footer.astro';
 import ReservationDialog from './ReservationDialog.astro';
 import ArDialog from './ArDialog.astro';
+import OrderDialog from './OrderDialog.astro';
 import { getImage } from 'astro:assets';
-import { site, getMenu, loc, parsePrice, resolveImage, SCHEMA_DAYS, mapsUrl } from '../lib/content';
+import { site, getMenu, loc, parsePrice, resolveImage, SCHEMA_DAYS, mapsUrl, closedDays, weeklyHours } from '../lib/content';
 import { useT, LANG_META, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
@@ -44,12 +45,16 @@ const jsonLd = {
     addressLocality: site.city,
     addressCountry: site.country,
   },
-  openingHoursSpecification: site.openingHours.map((h) => ({
+  openingHoursSpecification: weeklyHours().map((h) => ({
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: `https://schema.org/${SCHEMA_DAYS[h.day]}`,
     opens: h.open,
     closes: h.close,
   })),
+  // Ausnahmsweise geschlossen: opens = closes = 00:00 bedeutet bei Google „ganztägig geschlossen"
+  specialOpeningHoursSpecification: closedDays(lang)
+    .filter((c) => c.to >= new Date().toISOString().slice(0, 10))
+    .map((c) => ({ '@type': 'OpeningHoursSpecification', validFrom: c.from, validThrough: c.to, opens: '00:00', closes: '00:00' })),
   sameAs: [site.instagram, site.facebook].filter(Boolean),
   hasMenu: {
     '@type': 'Menu',
@@ -92,6 +97,7 @@ const vars = { name: site.name, city: site.city };
   <Footer lang={lang} />
   <ReservationDialog lang={lang} />
   <ArDialog lang={lang} />
+  <OrderDialog lang={lang} />
   <script>
     import '../scripts/app.ts';
   </script>

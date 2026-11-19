@@ -1,0 +1,101 @@
+---
+/**
+ * Warenkorb & Bestellung per WhatsApp (kein Backend, keine Online-Zahlung).
+ * Gast wählt Artikel mit „+“, öffnet den Warenkorb, wählt Abholen oder Vor Ort essen,
+ * Name, Datum und Uhrzeit – WhatsApp öffnet sich mit der fertigen Bestellung.
+ * Die Nummer kommt wie bei der Reservierung NUR aus site.json.
+ * Abschaltbar im Admin („Bestellung aktivieren“).
+ */
+import Icon from './Icon.astro';
+import { site, loc } from '../lib/content';
+import { useT, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+const enabled = site.orderEnabled !== false;
+
+const config = {
+  template: loc(site, 'orderTemplate', lang) || site.orderTemplate,
+  pickupLine: t('order.pickupLine'),
+  dineInLine: t('order.dineInLine'),
+  pickupTime: t('order.pickupTime'),
+  arrivalTime: t('order.arrivalTime'),
+  added: t('order.added'),
+  less: t('order.less'),
+  more: t('order.more'),
+};
+---
+{enabled && (
+  <>
+    <button type="button" class="cart-fab" data-cart-open hidden aria-haspopup="dialog" aria-controls="order-dialog">
+      <span class="cart-fab-icon"><Icon name="bag" /><span class="cart-count" data-cart-count>0</span></span>
+      <span class="cart-fab-text"><span class="sr-only">{t('order.cart')}: </span><span data-cart-total></span></span>
+    </button>
+    <p class="sr-only" aria-live="polite" data-cart-live></p>
+
+    <dialog class="dialog order-dialog" id="order-dialog" aria-labelledby="order-title">
+      <div class="dialog-head">
+        <h2 id="order-title">{t('order.title')}</h2>
+        <form method="dialog"><button class="icon-btn" aria-label={t('form.close')}><Icon name="x" /></button></form>
+      </div>
+
+      <div class="order-main" data-order-main>
+        <ul class="cart-list" data-cart-list></ul>
+        <p class="cart-empty" data-cart-empty>{t('order.empty')}</p>
+        <div class="cart-sum" data-cart-sum>
+          <span>{t('order.total')}</span><strong data-cart-sum-value></strong>
+        </div>
+        <p class="pay-note"><span aria-hidden="true">💶</span> {t('order.payNote')}</p>
+
+        <form class="order-form" data-order-form novalidate>
+          <fieldset class="mode-switch">
+            <legend class="sr-only">{t('order.pickup')} / {t('order.dineIn')}</legend>
+            <label><input type="radio" name="mode" value="pickup" checked /><span><span aria-hidden="true">🛍️</span> {t('order.pickup')}</span></label>
+            <label><input type="radio" name="mode" value="dinein" /><span><span aria-hidden="true">🍽️</span> {t('order.dineIn')}</span></label>
+          </fieldset>
+          <div class="field-row">
+            <div class="field">
+              <label for="ord-name">{t('form.name')}</label>
+              <input id="ord-name" name="name" required autocomplete="name" maxlength="60" />
+            </div>
+            <div class="field" data-persons-field hidden>
+              <label for="ord-persons">{t('form.persons')}</label>
+              <select id="ord-persons" name="persons">
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => <option value={n} selected={n === 2}>{n}</option>)}
+                <option value="12+">{t('form.more')}</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="ord-date">{t('form.date')}</label>
+              <input id="ord-date" name="date" type="date" required />
+            </div>
+            <div class="field">
+              <label for="ord-time" data-time-label>{t('order.pickupTime')}</label>
+              <select id="ord-time" name="time" required></select>
+            </div>
+          </div>
+          <p class="form-warn" data-order-warn hidden></p>
+          <div class="field">
+            <label for="ord-note">{t('form.note')}</label>
+            <textarea id="ord-note" name="note" rows="2" maxlength="300" placeholder={t('order.notePlaceholder')}></textarea>
+          </div>
+          <button type="submit" class="btn btn-wa order-submit"><Icon name="whatsapp" />{t('order.submit')}</button>
+          <p class="form-hint">{`${t('order.confirmHint')} ${t('form.privacy')}`}</p>
+        </form>
+      </div>
+
+      <div class="order-done" data-order-done hidden>
+        <p class="order-done-icon" aria-hidden="true">✅</p>
+        <h3>{t('order.doneTitle')}</h3>
+        <p>{t('order.doneText')}</p>
+        <div class="order-done-actions">
+          <button type="button" class="btn btn-primary" data-order-clear>{t('order.clear')}</button>
+          <button type="button" class="btn btn-outline" data-order-back>{t('order.back')}</button>
+        </div>
+      </div>
+      <script type="application/json" id="order-config" set:html={JSON.stringify(config)} />
+    </dialog>
+  </>
+)}

@@ -2,8 +2,8 @@
 /** Galerie, Über uns, Öffnungszeiten, Anfahrt und Kontakt */
 import { Image, getImage } from 'astro:assets';
 import Icon from './Icon.astro';
-import { site, loc, resolveImage, hoursByDay, fullAddress, mapsUrl, telHref, whatsappHref } from '../lib/content';
-import { useT, type Lang } from '../i18n/ui';
+import { site, loc, resolveImage, hoursByDay, closedDays, formatClosedDate, fullAddress, mapsUrl, telHref, whatsappHref } from '../lib/content';
+import { useT, LANG_META, type Lang } from '../i18n/ui';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useT(lang);
@@ -18,6 +18,10 @@ const aboutImg = resolveImage(site.aboutImage);
 const about = loc(site, 'about', lang).split(/\n\s*\n/);
 const hours = hoursByDay();
 const hoursNote = loc(site, 'hoursNote', lang);
+// Nur kommende Schließtage (Stand Build); das Skript blendet zusätzlich vergangene aus
+const buildDay = new Date().toISOString().slice(0, 10);
+const closures = closedDays(lang).filter((c) => c.to >= buildDay);
+const fmtDay = (iso: string) => formatClosedDate(iso, LANG_META[lang].locale);
 const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(`${site.name}, ${fullAddress()}`)}&output=embed`;
 ---
 {gallery.length > 0 && (
@@ -74,6 +78,19 @@ const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(`${site.nam
           </tbody>
         </table>
         {hoursNote && <p class="text-sm mt-3" style="color:var(--muted)">{hoursNote}</p>}
+        {closures.length > 0 && (
+          <div class="closures" data-closures>
+            <h4>{t('closure.title')}</h4>
+            <ul>
+              {closures.map((c) => (
+                <li data-to={c.to}>
+                  <span>{fmtDay(c.from)}{c.to !== c.from && <> – {fmtDay(c.to)}</>}</span>
+                  {c.reason && <span class="reason">{c.reason}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div class="card" id="anfahrt">
         <h3>{t('location.title')}</h3>

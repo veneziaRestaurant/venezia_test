@@ -21,6 +21,8 @@ const plate = resolveImage(site.heroImage);
       <p class="hero-tagline">{loc(site, 'tagline', lang)}</p>
       <p class="hero-address"><Icon name="pin" /><span>{fullAddress()}</span></p>
 
+      <p class="closure-banner" data-closure-banner role="status" hidden><span aria-hidden="true">⛔</span><span data-closure-text></span></p>
+
       <div class="hero-actions">
         <a class="btn btn-primary" href={whatsappHref()} data-reserve><Icon name="whatsapp" />{t('action.reserve')}</a>
         <a class="btn btn-ghost" href={telHref(site.phone)}><Icon name="phone" />{t('action.call')}</a>

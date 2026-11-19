@@ -52,6 +52,20 @@ und richtet fehlende Programme selbst ein. Für Entwickler geht weiterhin `npm r
 4. Alternativ direkt in `src/content/menu/<kategorie>.json` den Wert bei `"price"` ändern.
 5. `npm run check` meldet Tippfehler (falscher Preis, unbekanntes Allergen, fehlendes Bild).
 
+### Ruhetag (jede Woche geschlossen, z. B. jeden Mittwoch)
+1. Admin → **Restaurant-Daten** → **🚫 Ruhetage** → Tag ankreuzen (z. B. Mittwoch).
+2. **Speichern** → **Veröffentlichen**.
+3. Folge: Tabelle zeigt „Ruhetag“, keine Reservierung an diesem Wochentag, Status „Derzeit geschlossen“.
+4. Die Öffnungszeiten des Tages bleiben gespeichert und gelten wieder, sobald der Haken entfernt wird.
+5. Einzelne Tage (Feiertag, Urlaub) → nächster Abschnitt.
+
+### Tag schließen (Feiertag, Urlaub)
+1. Admin → **Restaurant-Daten** → **⛔ Geschlossene Tage** → **Hinzufügen**.
+2. **Von** wählen, **Bis** nur bei mehreren Tagen; Grund optional (z. B. `Weihnachten`, EN `Christmas`).
+3. **Done** → **Speichern** → **Veröffentlichen**.
+4. Folge: „Heute geschlossen“, keine Reservierung an diesen Tagen, Hinweis oben 7 Tage vorher, Liste bei Öffnungszeiten.
+5. Vergangene Einträge verschwinden automatisch von der Seite; im Admin kann man sie löschen (🗑).
+
 ### Seite veröffentlichen
 1. Im Admin auf **Speichern** klicken (blauer Button oben).
 2. Unten links im Kasten **🚀 Veröffentlichen** klicken (macht automatisch `git commit` + `git push`, nur Inhalte und Bilder).
@@ -189,6 +203,12 @@ zeigt sie wie auf GitHub unter `localhost:4321/venezia_test/`.
 - WhatsApp-Link getestet: `https://wa.me/<nummer>?text=…` mit Name, Personen, Datum (mit Wochentag), Uhrzeit, Anmerkung;
   Sonderzeichen korrekt kodiert; Ruhetage sperren das Formular; Uhrzeiten richten sich nach den Öffnungszeiten.
 - Pflege-Test im Admin: Preis geändert, Foto hochgeladen, gespeichert → sofort auf der Seite sichtbar.
+
+## TEST: Bestellung mit Warenkorb (per WhatsApp)
+- Bei jedem Preis ein „+“ → Artikel landet im Warenkorb (Button unten rechts mit Anzahl und Summe).
+- Warenkorb: Menge ändern, **Abholen** oder **Vor Ort essen**, Name, Datum, Uhrzeit (nur innerhalb der Öffnungszeiten, nicht an Ruhetagen/geschlossenen Tagen), Anmerkung.
+- **Per WhatsApp bestellen** öffnet WhatsApp mit fertiger Bestellung an die Nummer aus `site.json`. Bezahlung nur an der Kasse.
+- Admin → Restaurant-Daten: **🛒 Bestellung aktivieren** (aus = keine „+“-Buttons, kein Warenkorb) und Nachrichtenvorlage DE/EN/NL.
 
 ## TEST: AR-Ansicht „Auf dem Tisch ansehen“
 - Jedes Gericht mit Foto bekommt beim Build automatisch einen 3D-Teller (`npm run ar`, Ausgabe `public/ar/`).

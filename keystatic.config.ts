@@ -186,6 +186,35 @@ export default config({
             itemLabel: (p) => `${p.fields.day.value}: ${p.fields.open.value}–${p.fields.close.value}`,
           }
         ),
+        restDays: fields.multiselect({
+          label: '🚫 أيام العطلة الأسبوعية (مغلق كل أسبوع)',
+          description: 'اختر اليوم الذي يُغلق فيه المطعم كل أسبوع (مثلاً كل أربعاء). يظهر „Ruhetag" ولا يمكن الحجز فيه. أوقات العمل المسجلة لهذا اليوم تبقى محفوظة وتعود عند إزالة العلامة.',
+          options: [
+            { label: 'الاثنين (Montag)', value: 'mo' },
+            { label: 'الثلاثاء (Dienstag)', value: 'tu' },
+            { label: 'الأربعاء (Mittwoch)', value: 'we' },
+            { label: 'الخميس (Donnerstag)', value: 'th' },
+            { label: 'الجمعة (Freitag)', value: 'fr' },
+            { label: 'السبت (Samstag)', value: 'sa' },
+            { label: 'الأحد (Sonntag)', value: 'su' },
+          ],
+        }),
+        closedDays: fields.array(
+          fields.object({
+            from: fields.date({ label: 'مغلق من (التاريخ)', validation: { isRequired: true } }),
+            to: fields.date({ label: 'حتى (اختياري)', description: 'فارغ = يوم واحد فقط' }),
+            reason: fields.text({ label: 'السبب (ألماني، اختياري)', description: 'مثال: Weihnachten, Betriebsurlaub' }),
+            reason_en: fields.text({ label: 'السبب (إنجليزي)', description: 'مثال: Christmas, Holidays' }),
+            reason_nl: fields.text({ label: 'السبب (هولندي)', description: 'مثال: Kerstmis, Vakantie' }),
+          }),
+          {
+            label: '⛔ أيام إغلاق استثنائية (عطلة، إجازة …)',
+            description: 'في هذه الأيام يظهر „مغلق اليوم"، ولا يمكن الحجز، ويظهر تنبيه في الموقع قبلها بأسبوع. الأيام الماضية تختفي تلقائياً.',
+            // LTR-Isolierung: Datum links-nach-rechts darstellen, auch in der arabischen Oberfläche
+            itemLabel: (p) =>
+              `\u2066${p.fields.from.value ?? '?'}${p.fields.to.value && p.fields.to.value !== p.fields.from.value ? ` → ${p.fields.to.value}` : ''}${p.fields.reason.value ? ` · ${p.fields.reason.value}` : ''}\u2069`,
+          }
+        ),
         hoursNote: fields.text({ label: 'ملاحظة عن الأوقات (ألماني، اختياري)', description: 'مثال: Küche bis 21:30' }),
         hoursNote_en: fields.text({ label: 'ملاحظة عن الأوقات (إنجليزي)' }),
         hoursNote_nl: fields.text({ label: 'ملاحظة عن الأوقات (هولندي)' }),
@@ -196,6 +225,18 @@ export default config({
         }),
         reservationTemplate_en: fields.text({ label: 'نص رسالة واتساب (إنجليزي)', multiline: true }),
         reservationTemplate_nl: fields.text({ label: 'نص رسالة واتساب (هولندي)', multiline: true }),
+        orderEnabled: fields.checkbox({
+          label: '🛒 تفعيل الطلب (سلة المشتريات عبر واتساب)',
+          description: 'إيقاف = تختفي أزرار „+" وسلة المشتريات من الموقع (مثلاً عند الازدحام). الدفع دائماً عند الصندوق.',
+          defaultValue: true,
+        }),
+        orderTemplate: fields.text({
+          label: 'نص رسالة واتساب للطلب (ألماني)',
+          multiline: true,
+          description: 'المتغيرات: {items} {total} {mode} {name} {date} {time} {note}',
+        }),
+        orderTemplate_en: fields.text({ label: 'نص رسالة الطلب (إنجليزي)', multiline: true }),
+        orderTemplate_nl: fields.text({ label: 'نص رسالة الطلب (هولندي)', multiline: true }),
         about: fields.text({ label: 'من نحن (ألماني)', multiline: true }),
         about_en: fields.text({ label: 'من نحن (إنجليزي)', multiline: true }),
         about_nl: fields.text({ label: 'من نحن (هولندي)', multiline: true }),
