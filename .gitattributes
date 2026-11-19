@@ -1,0 +1,4 @@
+# .cmd-Dateien unverändert (mit CRLF) speichern, damit sie auch direkt von GitHub geladen funktionieren
+*.cmd -text
+*.command text eol=lf
+*.ico binary

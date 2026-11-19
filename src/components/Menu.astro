@@ -1,0 +1,115 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import DishItem from './DishItem.astro';
+import { type Category, type Dish, loc, resolveImage } from '../lib/content';
+import { ALLERGENS, ALLERGEN_CODES } from '../lib/allergens';
+import { useT, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang; menu: Category[] }
+const { lang, menu } = Astro.props;
+const t = useT(lang);
+
+/** Aufeinanderfolgende Gerichte mit gleicher Zwischenüberschrift zusammenfassen */
+function segments(dishes: Dish[]) {
+  const out: { title: string; items: { dish: Dish; index: number }[] }[] = [];
+  dishes.forEach((dish, index) => {
+    const title = loc(dish, 'group', lang);
+    const last = out[out.length - 1];
+    if (last && last.title === title) last.items.push({ dish, index });
+    else out.push({ title, items: [{ dish, index }] });
+  });
+  return out;
+}
+const hasVegan = menu.some((c) => c.dishes.some((d) => d.tags?.includes('vegan')));
+---
+<section id="speisekarte" class="section" aria-labelledby="menu-title">
+  <div class="container-x">
+    <p class="eyebrow">{t('menu.categories')}: {menu.length}</p>
+    <h2 id="menu-title" class="section-title">{t('menu.title')}</h2>
+    <p class="lead">{t('menu.prices')}</p>
+
+    <!-- Suche & Filter -->
+    <div class="menu-tools" role="search">
+      <div class="search">
+        <Icon name="search" />
+        <label for="menu-search" class="sr-only">{t('menu.searchLabel')}</label>
+        <input id="menu-search" type="search" placeholder={t('menu.search')} autocomplete="off" enterkeyhint="search" />
+      </div>
+      <div class="chips" role="group" aria-label="Filter">
+        <button type="button" class="chip" data-filter="vegetarian" aria-pressed="false"><Icon name="leaf" />{t('menu.filter.vegetarian')}</button>
+        {hasVegan && <button type="button" class="chip" data-filter="vegan" aria-pressed="false"><Icon name="leaf" />{t('menu.filter.vegan')}</button>}
+        <button type="button" class="chip" data-filter="spicy" aria-pressed="false"><Icon name="chili" />{t('menu.filter.spicy')}</button>
+        <button type="button" class="chip" data-filter="recommended" aria-pressed="false"><Icon name="star" />{t('menu.filter.recommended')}</button>
+        <details class="allergen-filter">
+          <summary class="chip" aria-pressed="false" data-allergen-summary><Icon name="sliders" />{t('menu.filter.allergens')} <span data-allergen-count></span></summary>
+          <div class="allergen-panel">
+            <p>{t('menu.filter.allergensHint')}</p>
+            <div class="allergen-grid">
+              {ALLERGEN_CODES.map((c) => (
+                <label><input type="checkbox" value={c} data-allergen-exclude /> <b>{c}</b> {ALLERGENS[c][lang]}</label>
+              ))}
+            </div>
+          </div>
+        </details>
+        <button type="button" class="chip chip-reset" data-filter-reset hidden>{t('menu.filter.reset')}</button>
+      </div>
+      <p class="results-info" aria-live="polite" data-results data-template={t('menu.results', { n: '{n}' })}></p>
+    </div>
+  </div>
+
+  <!-- Sticky Kategorie-Navigation -->
+  <nav class="cat-nav" aria-label={t('menu.categories')}>
+    <div class="container-x">
+      <div class="cat-nav-scroll" data-cat-nav>
+        {menu.map((c) => (
+          <a href={`#${c.slug}`} data-cat-link={c.slug}>{loc(c, 'name', lang)} <span class="count" data-cat-count>{c.dishes.length}</span></a>
+        ))}
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-x">
+    {menu.map((c) => {
+      const img = resolveImage(c.image);
+      const name = loc(c, 'name', lang);
+      const note = loc(c, 'note', lang);
+      const compact = c.kind === 'drinks';
+      return (
+        <section id={c.slug} class="menu-cat" data-cat={c.slug} aria-labelledby={`h-${c.slug}`}>
+          {img ? (
+            <div class="cat-banner reveal">
+              <Picture src={img} alt="" formats={['avif', 'webp']} widths={[480, 800, 1200]} sizes="(min-width: 1180px) 1130px, 100vw" loading="lazy" />
+              <h3 id={`h-${c.slug}`}>{name}</h3>
+            </div>
+          ) : (
+            <div class="cat-plain"><h3 id={`h-${c.slug}`}>{name}</h3></div>
+          )}
+          {note && <p class="cat-note">{note}</p>}
+          {segments(c.dishes).map((seg) => (
+            <>
+              {seg.title && <h4 class="group-title" data-group-title>{seg.title}</h4>}
+              <div class="dish-list">
+                {seg.items.map(({ dish, index }) => (
+                  <DishItem dish={dish} lang={lang} categorySlug={c.slug} compact={compact} index={index} fallbackImage={img} />
+                ))}
+              </div>
+            </>
+          ))}
+        </section>
+      );
+    })}
+
+    <p class="no-results" data-no-results hidden>{t('menu.noResults')}</p>
+
+    <!-- Allergen-Legende -->
+    <aside id="allergene" class="legend" aria-labelledby="legend-title">
+      <h3 id="legend-title">{t('allergens.title')}</h3>
+      <p class="text-sm mt-1" style="color:var(--muted)">{t('allergens.intro')}</p>
+      <div class="legend-grid">
+        {ALLERGEN_CODES.map((c) => <div><b>{c}</b><span>{ALLERGENS[c][lang]}</span></div>)}
+      </div>
+      <small>{t('allergens.disclaimer')}</small>
+    </aside>
+  </div>
+</section>

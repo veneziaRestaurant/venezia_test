@@ -1,0 +1,44 @@
+---
+/**
+ * VORLAGE Impressum / Offenlegung nach § 5 ECG, § 14 UGB, § 25 MedienG (Österreich).
+ * Die Angaben kommen aus src/content/site.json (Felder legal…). Gelb markierte Stellen bitte ausfüllen.
+ * Hinweis: Keine Rechtsberatung – im Zweifel von der WKO prüfen lassen.
+ */
+import LegalPage from '../components/LegalPage.astro';
+import { site, fullAddress } from '../lib/content';
+const todo = (v?: string) => !v || v.startsWith('[');
+---
+<LegalPage title="Impressum" description={`Impressum und Offenlegung von ${site.name}`}>
+  <h2>Medieninhaber & Betreiber</h2>
+  <p>
+    <span class:list={{ todo: todo(site.legalOwner) }}>{site.legalOwner}</span><br />
+    {site.name} – {site.subtitle}<br />
+    {fullAddress()}<br />
+    {site.country === 'AT' ? 'Österreich' : site.country}
+  </p>
+
+  <h2>Kontakt</h2>
+  <p>Telefon: <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a><br />
+  E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+
+  <h2>Unternehmensangaben</h2>
+  <ul>
+    <li>Rechtsform: <span class:list={{ todo: todo(site.legalForm) }}>{site.legalForm}</span></li>
+    <li>UID-Nummer: <span class:list={{ todo: todo(site.legalUid) }}>{site.legalUid}</span></li>
+    {site.legalRegister && <li>Firmenbuch: {site.legalRegister}</li>}
+    <li>Unternehmensgegenstand / Gewerbe: {site.legalTrade}</li>
+    <li>Mitglied der {site.legalChamber}</li>
+    <li>Gewerbebehörde: <span class:list={{ todo: todo(site.legalAuthority) }}>{site.legalAuthority}</span></li>
+    <li>Anwendbare Rechtsvorschriften: Gewerbeordnung (GewO), abrufbar unter <a href="https://www.ris.bka.gv.at" rel="noopener">www.ris.bka.gv.at</a></li>
+  </ul>
+
+  <h2>Blattlinie</h2>
+  <p>Information über das Restaurant {site.name}, seine Speisen, Getränke, Öffnungszeiten und Reservierungsmöglichkeiten.</p>
+
+  <h2>Online-Streitbeilegung</h2>
+  <p>Verbraucher haben die Möglichkeit, Beschwerden an die Online-Streitbeilegungsplattform der EU zu richten:
+  <a href="https://ec.europa.eu/consumers/odr" rel="noopener">ec.europa.eu/consumers/odr</a>. Sie können allfällige Beschwerden auch an die oben angegebene E-Mail-Adresse richten.</p>
+
+  <h2>Haftung & Bildnachweis</h2>
+  <p>Alle Preise in Euro inkl. MwSt. Irrtümer, Druck- und Satzfehler vorbehalten.</p>
+</LegalPage>

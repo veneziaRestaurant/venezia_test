@@ -1,0 +1,98 @@
+---
+import { absUrl } from '../lib/paths';
+import Layout from '../layouts/Layout.astro';
+import Topbar from './Topbar.astro';
+import Hero from './Hero.astro';
+import Menu from './Menu.astro';
+import Sections from './Sections.astro';
+import Footer from './Footer.astro';
+import ReservationDialog from './ReservationDialog.astro';
+import ArDialog from './ArDialog.astro';
+import { getImage } from 'astro:assets';
+import { site, getMenu, loc, parsePrice, resolveImage, SCHEMA_DAYS, mapsUrl } from '../lib/content';
+import { useT, LANG_META, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+const menu = getMenu();
+const base = Astro.site ?? new URL(site.url);
+const pageUrl = absUrl(LANG_META[lang].path, base);
+
+const heroImg = resolveImage(site.aboutImage) ?? resolveImage(site.heroImage);
+const schemaImage = heroImg ? new URL((await getImage({ src: heroImg, width: 1200, format: 'jpg' })).src, base).href : undefined;
+
+// Schema.org: Restaurant + vollständige Speisekarte → bessere Darstellung bei Google
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  '@id': `${absUrl('/', base)}#restaurant`,
+  name: site.name,
+  description: loc(site, 'tagline', lang),
+  url: pageUrl,
+  image: schemaImage,
+  telephone: site.phone,
+  email: site.email || undefined,
+  servesCuisine: ['Italienisch', 'Pizza', 'Pasta', 'Österreichisch'],
+  priceRange: '€€',
+  acceptsReservations: 'True',
+  hasMap: mapsUrl(),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.street,
+    postalCode: site.zip,
+    addressLocality: site.city,
+    addressCountry: site.country,
+  },
+  openingHoursSpecification: site.openingHours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: `https://schema.org/${SCHEMA_DAYS[h.day]}`,
+    opens: h.open,
+    closes: h.close,
+  })),
+  sameAs: [site.instagram, site.facebook].filter(Boolean),
+  hasMenu: {
+    '@type': 'Menu',
+    name: t('menu.title'),
+    inLanguage: LANG_META[lang].locale,
+    hasMenuSection: menu.map((c) => ({
+      '@type': 'MenuSection',
+      name: loc(c, 'name', lang),
+      hasMenuItem: c.dishes.map((d) => ({
+        '@type': 'MenuItem',
+        name: loc(d, 'name', lang),
+        description: loc(d, 'description', lang) || undefined,
+        offers: [
+          { price: d.price, size: d.size },
+          ...(d.price2 ? [{ price: d.price2, size: d.size2 }] : []),
+        ].map((p) => ({
+          '@type': 'Offer',
+          price: parsePrice(p.price)?.toFixed(2),
+          priceCurrency: 'EUR',
+          name: p.size || undefined,
+          availability: d.soldOut ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+        })),
+        suitableForDiet: d.tags?.includes('vegan')
+          ? 'https://schema.org/VeganDiet'
+          : d.tags?.includes('vegetarian') ? 'https://schema.org/VegetarianDiet' : undefined,
+      })),
+    })),
+  },
+};
+const vars = { name: site.name, city: site.city };
+---
+<Layout lang={lang} title={t('meta.title', vars)} description={t('meta.description', vars)} alternatesFor="" jsonLd={jsonLd}>
+  <a href="#speisekarte" class="skip-link">{t('skip')}</a>
+  <Topbar lang={lang} />
+  <main>
+    <Hero lang={lang} />
+    <Menu lang={lang} menu={menu} />
+    <Sections lang={lang} />
+  </main>
+  <Footer lang={lang} />
+  <ReservationDialog lang={lang} />
+  <ArDialog lang={lang} />
+  <script>
+    import '../scripts/app.ts';
+  </script>
+</Layout>

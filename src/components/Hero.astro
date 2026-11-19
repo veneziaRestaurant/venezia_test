@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { site, resolveImage, loc, fullAddress, mapsUrl, telHref, whatsappHref } from '../lib/content';
+import { useT, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+const logo = resolveImage(site.logo);
+const plate = resolveImage(site.heroImage);
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container-x hero-grid">
+    <div>
+      <h1 id="hero-title" class="sr-only">{site.name} – {site.subtitle}</h1>
+      {logo ? (
+        <Image src={logo} alt={`${site.name} – ${site.subtitle}`} class="hero-logo" widths={[480, 960]} format="webp" sizes="(min-width: 540px) 480px, 92vw" loading="eager" fetchpriority="high" />
+      ) : (
+        <p class="font-display text-6xl">{site.name}</p>
+      )}
+      <p class="hero-tagline">{loc(site, 'tagline', lang)}</p>
+      <p class="hero-address"><Icon name="pin" /><span>{fullAddress()}</span></p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href={whatsappHref()} data-reserve><Icon name="whatsapp" />{t('action.reserve')}</a>
+        <a class="btn btn-ghost" href={telHref(site.phone)}><Icon name="phone" />{t('action.call')}</a>
+        <a class="btn btn-ghost" href={mapsUrl()} target="_blank" rel="noopener"><Icon name="route" />{t('action.route')}</a>
+      </div>
+
+      <div class="hero-sub">
+        <span class="status-pill" data-open-status data-open="false" style="visibility:hidden">
+          <span class="dot" aria-hidden="true"></span><span data-open-text>&nbsp;</span>
+        </span>
+        {site.googleReviewUrl && (
+          <a href={site.googleReviewUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5">
+            <Icon name="star" class="w-4 h-4 text-[var(--accent)]" />{t('action.review')}
+          </a>
+        )}
+        <a href="#speisekarte">{t('action.viewMenu')} ↓</a>
+      </div>
+    </div>
+
+    {plate && (
+      <div class="hero-plate" aria-hidden="true">
+        <Image src={plate} alt="" widths={[420, 640, 900]} sizes="(min-width: 900px) 520px, 420px" loading="eager" />
+      </div>
+    )}
+  </div>
+  <a href="#speisekarte" class="hero-scroll" aria-label={t('action.viewMenu')}><Icon name="chevron" /></a>
+</section>

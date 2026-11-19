@@ -1,0 +1,121 @@
+{
+  "name": "Suppen",
+  "name_en": "Soups",
+  "name_nl": "Soepen",
+  "order": 30,
+  "hidden": false,
+  "kind": "food",
+  "image": "/src/assets/images/categories/suppen/image.jpg",
+  "note": "",
+  "note_en": "",
+  "note_nl": "",
+  "dishes": [
+    {
+      "name": "Hausgemachte Rindsuppe",
+      "description": "Mit Nudeln oder Frittaten",
+      "name_en": "Homemade Beef Broth",
+      "description_en": "With noodles or pancake strips",
+      "name_nl": "Huisgemaakte runderbouillon",
+      "description_nl": "Met noedels of pannenkoekreepjes",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "6,90",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "A",
+        "F",
+        "G",
+        "L"
+      ],
+      "tags": [],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/suppen/dishes/0/image.jpeg"
+    },
+    {
+      "name": "Knoblauchcremesuppe",
+      "description": "Mit Croutons",
+      "name_en": "Cream of Garlic Soup",
+      "description_en": "With croutons",
+      "name_nl": "Knoflookroomsoep",
+      "description_nl": "Met croutons",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "6,90",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "A",
+        "G"
+      ],
+      "tags": [
+        "vegetarian"
+      ],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/suppen/dishes/1/image.jpeg"
+    },
+    {
+      "name": "Tomatencremesuppe",
+      "description": "Mit Croutons",
+      "name_en": "Cream of Tomato Soup",
+      "description_en": "With croutons",
+      "name_nl": "Tomatenroomsoep",
+      "description_nl": "Met croutons",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "6,90",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "A",
+        "F",
+        "G"
+      ],
+      "tags": [
+        "vegetarian"
+      ],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/suppen/dishes/2/image.jpeg"
+    },
+    {
+      "name": "Kaspressknödelsuppe",
+      "description": "",
+      "name_en": "Cheese Dumpling Soup",
+      "description_en": "",
+      "name_nl": "Soep met kaasknoedels",
+      "description_nl": "",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "6,90",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "A",
+        "B",
+        "F",
+        "G",
+        "L",
+        "M"
+      ],
+      "tags": [],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/suppen/dishes/3/image.jpeg"
+    }
+  ]
+}

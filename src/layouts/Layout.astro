@@ -1,0 +1,79 @@
+---
+import { withBase, absUrl } from '../lib/paths';
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import { site, resolveImage } from '../lib/content';
+import { LANGS, LANG_META, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Pfad ohne Sprachpräfix, z. B. "" für die Startseite. Erzeugt hreflang-Links. */
+  alternatesFor?: string;
+  noindex?: boolean;
+  jsonLd?: object;
+}
+const { lang, title, description, alternatesFor, noindex = false, jsonLd } = Astro.props;
+const meta = LANG_META[lang];
+// Verzeichnis-URLs immer mit „/“ am Ende (so liefert GitHub Pages sie aus)
+const path = Astro.url.pathname.endsWith('/') || /\.[a-z0-9]+$/i.test(Astro.url.pathname) ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonical = new URL(path, Astro.site ?? site.url).href;
+
+const ogSource = resolveImage(site.aboutImage) ?? resolveImage(site.heroImage);
+const og = ogSource ? await getImage({ src: ogSource, width: 1200, height: 630, fit: 'cover', format: 'jpg' }) : undefined;
+const ogUrl = og ? new URL(og.src, Astro.site ?? site.url).href : undefined;
+
+// Markenfarben aus site.json – mit Prüfung, damit ein Tippfehler nicht das Design zerstört
+const hex = (v: string, fallback: string) => (/^#[0-9a-fA-F]{3,8}$/.test(v ?? '') ? v : fallback);
+const themeVars = `:root{--brand:${hex(site.colorBrand, '#2b1a12')};--accent:${hex(site.colorAccent, '#c49a52')};--highlight:${hex(site.colorHighlight, '#a8432a')}}`;
+---
+<!doctype html>
+<html lang={meta.locale} dir={meta.dir} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {/* TEST-REPO: ganze Seite nicht indexieren */}
+    <meta name="robots" content="noindex" />
+    {alternatesFor !== undefined && LANGS.map((l) => (
+      <link rel="alternate" hreflang={LANG_META[l].locale} href={absUrl(LANG_META[l].path + alternatesFor, Astro.site ?? site.url)} />
+    ))}
+    {alternatesFor !== undefined && <link rel="alternate" hreflang="x-default" href={absUrl('/' + alternatesFor, Astro.site ?? site.url)} />}
+    <meta name="theme-color" content={hex(site.colorBrand, '#2b1a12')} />
+    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={withBase("/apple-touch-icon.png")} />
+    <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
+
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={meta.locale.replace('-', '_')} />
+    {ogUrl && <meta property="og:image" content={ogUrl} />}
+    {ogUrl && <meta property="og:image:width" content="1200" />}
+    {ogUrl && <meta property="og:image:height" content="630" />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <style set:html={themeVars}></style>
+    <script is:inline>
+      // Vor dem ersten Zeichnen: JS-Klasse + gespeichertes oder System-Design setzen (verhindert Flackern)
+      (function () {
+        var d = document.documentElement;
+        d.classList.remove('no-js');
+        d.classList.add('js');
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        d.dataset.theme = t;
+      })();
+    </script>
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

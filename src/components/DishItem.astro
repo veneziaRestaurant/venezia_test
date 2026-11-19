@@ -1,0 +1,116 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from './Icon.astro';
+import { type Dish, loc, formatPrice, dishImage, slugify } from '../lib/content';
+import { ALLERGENS } from '../lib/allergens';
+import { useT, type Lang } from '../i18n/ui';
+import { existsSync } from 'node:fs';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  dish: Dish;
+  lang: Lang;
+  categorySlug: string;
+  /** Getränke: Mengenangabe direkt beim Preis */
+  compact?: boolean;
+  index: number;
+  /** Ersatzbild, wenn das Gericht (noch) kein eigenes Foto hat – meist das Kategoriebild */
+  fallbackImage?: ImageMetadata;
+}
+const { dish, lang, categorySlug, compact = false, index, fallbackImage } = Astro.props;
+const t = useT(lang);
+
+const name = loc(dish, 'name', lang);
+const desc = loc(dish, 'description', lang);
+// In EN/NL zusätzlich den deutschen Originalnamen zeigen, wenn er abweicht (hilft beim Bestellen)
+const original = lang !== 'de' && dish.name !== name ? dish.name : '';
+const ownImg = dishImage(dish, categorySlug);
+const img = ownImg ?? fallbackImage;
+const allergens = dish.allergens ?? [];
+const tags = dish.tags ?? [];
+const id = `${categorySlug}-${slugify(dish.name)}-${index}`;
+
+// Suchtext in allen Sprachen, damit Gäste auch auf Englisch „mushroom" finden
+const searchText = [dish.name, dish.name_en, dish.name_nl, dish.description, dish.description_en, dish.description_nl, dish.group, dish.group_en, dish.group_nl]
+  .filter(Boolean).join(' ');
+const prices = [
+  { price: dish.price, size: dish.size },
+  ...(dish.price2 ? [{ price: dish.price2, size: dish.size2 }] : []),
+];
+const alNames = allergens.map((a) => `${a} = ${ALLERGENS[a]?.[lang] ?? a}`).join(', ');
+// AR: echter Scan hat Vorrang, sonst das automatisch erzeugte Teller-Modell (scripts/generate-ar-models.mjs)
+const autoModel = `/ar/${categorySlug}-${slugify(dish.name)}.glb`;
+const arSrc = dish.model3d
+  ? withBase(dish.model3d)
+  : !compact && ownImg && existsSync(`public${autoModel}`) ? withBase(autoModel) : undefined;
+const arIos = dish.model3dIos ? withBase(dish.model3dIos) : undefined;
+const showSizeBadge = !compact && dish.size && prices.length === 1;
+---
+<article
+  class:list={['dish', { 'is-rec': dish.recommended, 'is-sold': dish.soldOut, 'is-drink': compact }]}
+  data-dish
+  data-search={searchText}
+  data-allergens={allergens.join(' ')}
+  data-tags={tags.join(' ')}
+  data-rec={dish.recommended ? '1' : undefined}
+  data-group={loc(dish, 'group', lang) || undefined}
+>
+  <div class:list={['dish-img', { 'is-fallback': !ownImg }]}>
+    {img ? (
+      <Picture
+        src={img}
+        alt={ownImg ? name : ''}
+        formats={['avif', 'webp']}
+        widths={[240, 360, 560, 800, 1200]}
+        sizes="(min-width: 1180px) 280px, (min-width: 900px) 24vw, 46vw"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <span class="dish-ph" aria-hidden="true"><Icon name={compact ? 'glass' : 'plate'} /></span>
+    )}
+    {dish.recommended && <span class="dish-star" aria-hidden="true"><Icon name="star" /></span>}
+    {arSrc && (
+      <button type="button" class="ar-btn" data-ar={arSrc} data-ar-ios={arIos} data-ar-name={name} data-ar-scan={dish.model3d ? '1' : undefined}>
+        <Icon name="ar" /><span>{t('ar.button')}</span>
+      </button>
+    )}
+  </div>
+
+  <div class="dish-body">
+    <h4 class="dish-name">{name}</h4>
+    {original && <p class="dish-sub" lang="de">{original}</p>}
+    {desc && <p class="dish-desc">{desc}</p>}
+
+    <div class="dish-prices">
+      {prices.map((p) => (
+        <p class="dish-price">
+          {formatPrice(p.price, lang)}<span class="cur"> €</span>
+          {(prices.length > 1 || compact) && p.size && <small>{p.size}</small>}
+        </p>
+      ))}
+    </div>
+
+    {(dish.recommended || dish.soldOut || tags.length > 0 || allergens.length > 0 || showSizeBadge) && (
+      <div class="dish-meta">
+        {dish.soldOut && <span class="badge badge-sold">{t('badge.soldOut')}</span>}
+        {dish.recommended && <span class="badge badge-rec"><Icon name="star" />{t('badge.recommended')}</span>}
+        {tags.includes('vegan') ? (
+          <span class="badge badge-veg"><Icon name="leaf" />{t('badge.vegan')}</span>
+        ) : tags.includes('vegetarian') && (
+          <span class="badge badge-veg"><Icon name="leaf" />{t('badge.vegetarian')}</span>
+        )}
+        {tags.includes('spicy') && <span class="badge badge-spicy"><Icon name="chili" />{t('badge.spicy')}</span>}
+        {showSizeBadge && <span class="badge badge-size">{dish.size}</span>}
+        {allergens.length > 0 && (
+          <button type="button" class="al-btn" aria-expanded="false" aria-controls={`al-${id}`}>
+            <span class="sr-only">{t('footer.allergens')}:</span>
+            {allergens.map((a) => <abbr title={ALLERGENS[a]?.[lang]}>{a}</abbr>)}
+          </button>
+        )}
+      </div>
+    )}
+    {allergens.length > 0 && <p class="al-full" id={`al-${id}`} hidden>{t('allergens.contains')}: {alNames}</p>}
+  </div>
+</article>

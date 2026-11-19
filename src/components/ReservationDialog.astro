@@ -1,0 +1,60 @@
+---
+import Icon from './Icon.astro';
+import { site, loc } from '../lib/content';
+import { useT, LANG_META, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+
+// Alles, was das Skript zum Bauen des WhatsApp-Links braucht – Nummer kommt NUR aus site.json
+const config = {
+  whatsapp: site.whatsapp,
+  restaurant: site.name,
+  template: loc(site, 'reservationTemplate', lang) || site.reservationTemplate,
+  locale: LANG_META[lang].locale,
+  timezone: site.timezone || 'Europe/Vienna',
+  hours: site.openingHours,
+  noteLabel: t('form.noteLabel'),
+  closedText: t('status.closed'),
+  openText: t('status.open'),
+  untilText: t('status.until'),
+};
+---
+<dialog class="dialog" id="reserve-dialog" aria-labelledby="reserve-title">
+  <div class="dialog-head">
+    <h2 id="reserve-title">{t('form.title')}</h2>
+    <form method="dialog"><button class="icon-btn" aria-label={t('form.close')}><Icon name="x" /></button></form>
+  </div>
+  <p class="intro">{t('form.intro')}</p>
+  <form class="res-form" data-res-form novalidate>
+    <div class="field">
+      <label for="res-name">{t('form.name')}</label>
+      <input id="res-name" name="name" required autocomplete="name" maxlength="60" />
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="res-persons">{t('form.persons')}</label>
+        <select id="res-persons" name="persons">
+          {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => <option value={n} selected={n === 2}>{n}</option>)}
+          <option value="12+">{t('form.more')}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="res-date">{t('form.date')}</label>
+        <input id="res-date" name="date" type="date" required />
+      </div>
+    </div>
+    <div class="field">
+      <label for="res-time">{t('form.time')}</label>
+      <select id="res-time" name="time" required></select>
+      <p class="form-warn" data-closed-warn hidden>{t('form.closedDay')}</p>
+    </div>
+    <div class="field">
+      <label for="res-note">{t('form.note')}</label>
+      <textarea id="res-note" name="note" rows="2" maxlength="300" placeholder={t('form.notePlaceholder')}></textarea>
+    </div>
+    <button type="submit" class="btn btn-wa" style="min-height:54px;font-size:1.02rem"><Icon name="whatsapp" />{t('form.submit')}</button>
+    <p class="form-hint">{t('form.privacy')}</p>
+  </form>
+  <script type="application/json" id="site-config" set:html={JSON.stringify(config)} />
+</dialog>

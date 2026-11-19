@@ -1,0 +1,38 @@
+---
+import { withBase } from '../lib/paths';
+import Icon from './Icon.astro';
+import { site, whatsappHref } from '../lib/content';
+import { LANGS, LANG_META, useT, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+<header class="topbar">
+  <div class="container-x topbar-inner">
+    <a href={withBase(LANG_META[lang].path)} class="font-display text-2xl font-semibold tracking-wide no-underline" style="text-decoration:none">
+      {site.name}
+    </a>
+    <nav aria-label="Hauptnavigation" class="hidden lg:flex gap-6">
+      <a href="#speisekarte">{t('nav.menu')}</a>
+      <a href="#galerie">{t('nav.gallery')}</a>
+      <a href="#ueber-uns">{t('nav.about')}</a>
+      <a href="#oeffnungszeiten">{t('nav.hours')}</a>
+      <a href="#kontakt">{t('nav.contact')}</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <nav class="lang-switch" aria-label={t('lang.label')}>
+        {LANGS.map((l) => (
+          <a href={withBase(LANG_META[l].path)} hreflang={LANG_META[l].locale} lang={LANG_META[l].locale}
+             aria-current={l === lang ? 'page' : undefined} title={LANG_META[l].label}>{LANG_META[l].short}</a>
+        ))}
+      </nav>
+      <button class="icon-btn" type="button" data-theme-toggle aria-label={t('theme.toggle')} title={t('theme.toggle')}>
+        <Icon name="moon" class="theme-icon-dark" />
+        <Icon name="sun" class="theme-icon-light hidden" />
+      </button>
+      <a href={whatsappHref()} class="btn btn-primary hidden md:inline-flex" data-reserve style="min-height:40px;padding:.45rem 1rem">
+        <Icon name="whatsapp" />{t('action.reserve')}
+      </a>
+    </div>
+  </div>
+</header>

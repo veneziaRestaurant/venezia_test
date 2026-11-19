@@ -1,0 +1,108 @@
+{
+  "name": "Venezia",
+  "subtitle": "Pizzeria · Restaurant",
+  "tagline": "Steinofenpizza, Pasta & Grillklassiker – frisch für Sie zubereitet.",
+  "tagline_en": "Stone-oven pizza, pasta & grill classics – freshly prepared for you.",
+  "tagline_nl": "Steenovenpizza, pasta & grillklassiekers – vers voor u bereid.",
+  "url": "https://veneziarestaurant.github.io/venezia_test/",
+  "street": "Nikolaus-Gassner-Straße 41a",
+  "zip": "5710",
+  "city": "Kaprun",
+  "country": "AT",
+  "phone": "+43 676 5201720",
+  "whatsapp": "43654720322",
+  "email": "info@venezia-pizzeria.at",
+  "googleMapsUrl": "https://maps.app.goo.gl/6T4BNf3aSZbVJnaN7",
+  "googleReviewUrl": "https://www.google.com/search?q=Pizzeria+Venezia+Kaprun",
+  "timezone": "Europe/Vienna",
+  "openingHours": [
+    {
+      "day": "mo",
+      "open": "11:00",
+      "close": "00:00"
+    },
+    {
+      "day": "tu",
+      "open": "11:00",
+      "close": "00:00"
+    },
+    {
+      "day": "we",
+      "open": "11:00",
+      "close": "00:00"
+    },
+    {
+      "day": "th",
+      "open": "11:00",
+      "close": "00:00"
+    },
+    {
+      "day": "fr",
+      "open": "11:00",
+      "close": "00:00"
+    },
+    {
+      "day": "sa",
+      "open": "11:00",
+      "close": "00:00"
+    },
+    {
+      "day": "su",
+      "open": "11:00",
+      "close": "00:00"
+    }
+  ],
+  "reservationTemplate": "Hallo {restaurant}, ich möchte gerne einen Tisch reservieren:\n\n👤 Name: {name}\n👥 Personen: {persons}\n📅 Datum: {date}\n🕖 Uhrzeit: {time}\n{note}\nVielen Dank!",
+  "reservationTemplate_en": "Hello {restaurant}, I would like to book a table:\n\n👤 Name: {name}\n👥 Guests: {persons}\n📅 Date: {date}\n🕖 Time: {time}\n{note}\nThank you!",
+  "reservationTemplate_nl": "Hallo {restaurant}, ik wil graag een tafel reserveren:\n\n👤 Naam: {name}\n👥 Personen: {persons}\n📅 Datum: {date}\n🕖 Tijd: {time}\n{note}\nHartelijk dank!",
+  "about": "Im Venezia dreht sich alles um ehrliche, frisch zubereitete Küche: knusprige Pizza aus dem Steinofen, hausgemachte Suppen und Spinatspätzle, Pasta mit Meeresfrüchten und saftige Klassiker vom Grill.\n\nDazu ein gut gezapftes Bier, ein Glas Wein und Zeit für Familie und Freunde – wir freuen uns auf Ihren Besuch.",
+  "about_en": "At Venezia it is all about honest, freshly cooked food: crispy stone-oven pizza, homemade soups and spinach spaetzle, seafood pasta and juicy grill classics.\n\nAdd a well-poured beer, a glass of wine and time with family and friends – we look forward to your visit.",
+  "about_nl": "Bij Venezia draait alles om eerlijke, vers bereide gerechten: knapperige pizza uit de steenoven, huisgemaakte soepen en spinaziespätzle, pasta met zeevruchten en sappige klassiekers van de grill.\n\nDaarbij een goed getapt biertje, een glas wijn en tijd voor familie en vrienden – we verheugen ons op uw bezoek.",
+  "logo": "/src/assets/images/site/logo.png",
+  "heroImage": "/src/assets/images/site/heroImage.png",
+  "aboutImage": "/src/assets/images/site/aboutImage.jpg",
+  "gallery": [
+    {
+      "image": "/src/assets/images/gallery/gallery/0/image.jpg",
+      "alt": "Steinofenpizza mit Rucola und Kirschtomaten"
+    },
+    {
+      "image": "/src/assets/images/gallery/gallery/1/image.jpg",
+      "alt": "Spaghetti mit Garnelen und Rucola"
+    },
+    {
+      "image": "/src/assets/images/gallery/gallery/2/image.jpg",
+      "alt": "Gegrilltes Steak mit Beilagen"
+    },
+    {
+      "image": "/src/assets/images/gallery/gallery/3/image.jpg",
+      "alt": "Barkeeper mixt einen Drink"
+    },
+    {
+      "image": "/src/assets/images/gallery/gallery/4/image.jpg",
+      "alt": "Frischer Kaffee mit Bohnen"
+    },
+    {
+      "image": "/src/assets/images/gallery/gallery/5/image.jpg",
+      "alt": "Digestif und Whisky am Abend"
+    },
+    {
+      "image": "/src/assets/images/gallery/gallery/6/image.jpg",
+      "alt": "Rotwein wird eingeschenkt"
+    },
+    {
+      "image": "/src/assets/images/gallery/gallery/7/image.jpg",
+      "alt": "Frisch gezapftes Bier"
+    },
+    {
+      "image": "/src/assets/images/gallery/gallery/8/image.jpeg",
+      "alt": "Bier"
+    }
+  ],
+  "colorBrand": "#2b1a12",
+  "colorAccent": "#c49a52",
+  "colorHighlight": "#a8432a",
+  "legalOwner": "Delsher Alkhalaf",
+  "legalChamber": "Wirtschaftskammer Salzburg, Fachgruppe Gastronomie",
+  "legalTrade": "Gastgewerbe "
+}

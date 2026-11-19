@@ -1,0 +1,113 @@
+---
+/** Galerie, Über uns, Öffnungszeiten, Anfahrt und Kontakt */
+import { Image, getImage } from 'astro:assets';
+import Icon from './Icon.astro';
+import { site, loc, resolveImage, hoursByDay, fullAddress, mapsUrl, telHref, whatsappHref } from '../lib/content';
+import { useT, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const gallery = await Promise.all(
+  (site.gallery ?? [])
+    .map((g) => ({ img: resolveImage(g.image), alt: g.alt }))
+    .filter((g) => g.img)
+    .map(async (g) => ({ ...g, full: (await getImage({ src: g.img!, width: 1400, format: 'webp' })).src }))
+);
+const aboutImg = resolveImage(site.aboutImage);
+const about = loc(site, 'about', lang).split(/\n\s*\n/);
+const hours = hoursByDay();
+const hoursNote = loc(site, 'hoursNote', lang);
+const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(`${site.name}, ${fullAddress()}`)}&output=embed`;
+---
+{gallery.length > 0 && (
+  <section id="galerie" class="section section-alt" aria-labelledby="gallery-title">
+    <div class="container-x">
+      <p class="eyebrow">{site.name}</p>
+      <h2 id="gallery-title" class="section-title reveal">{t('gallery.title')}</h2>
+      <div class="gallery">
+        {gallery.map((g) => (
+          <button type="button" data-lightbox data-full={g.full} data-alt={g.alt} aria-label={g.alt}>
+            <Image src={g.img!} alt={g.alt} widths={[300, 600, 900]} sizes="(min-width: 768px) 25vw, 50vw" loading="lazy" />
+          </button>
+        ))}
+      </div>
+    </div>
+    <dialog class="lightbox" data-lightbox-dialog aria-label={t('gallery.title')}>
+      <img alt="" data-lightbox-img />
+      <form method="dialog"><button class="icon-btn" aria-label={t('form.close')}><Icon name="x" /></button></form>
+    </dialog>
+  </section>
+)}
+
+<section id="ueber-uns" class="section" aria-labelledby="about-title">
+  <div class="container-x about-grid">
+    {aboutImg && (
+      <div class="about-img reveal">
+        <Image src={aboutImg} alt="" widths={[480, 800, 1100]} sizes="(min-width: 900px) 540px, 100vw" loading="lazy" />
+      </div>
+    )}
+    <div class="about-text">
+      <p class="eyebrow">{site.subtitle}</p>
+      <h2 id="about-title" class="section-title reveal">{t('about.title')}</h2>
+      <div class="mt-5">{about.map((p) => <p>{p}</p>)}</div>
+    </div>
+  </div>
+</section>
+
+<section id="oeffnungszeiten" class="section section-alt" aria-labelledby="hours-title">
+  <div class="container-x">
+    <p class="eyebrow">{site.city}</p>
+    <h2 id="hours-title" class="section-title reveal">{t('hours.title')} & {t('location.title')}</h2>
+    <div class="info-grid">
+      <div class="card">
+        <h3>{t('hours.title')}</h3>
+        <table class="hours">
+          <caption class="sr-only">{t('hours.title')}</caption>
+          <tbody>
+            {hours.map((h) => (
+              <tr data-day={h.day}>
+                <th scope="row">{t(`days.${h.day}` as any)}</th>
+                <td>{h.slots.length ? h.slots.map((s) => `${s.open}–${s.close}`).join(', ') : <span class="closed">{t('hours.closed')}</span>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {hoursNote && <p class="text-sm mt-3" style="color:var(--muted)">{hoursNote}</p>}
+      </div>
+      <div class="card" id="anfahrt">
+        <h3>{t('location.title')}</h3>
+        <p class="flex gap-2 items-start"><Icon name="pin" class="w-5 h-5 mt-0.5 shrink-0 text-[var(--highlight-ink)]" /><span>{site.name}<br />{fullAddress()}</span></p>
+        <div class="map-box" data-map data-src={mapEmbed}>
+          <div>
+            <Icon name="pin" class="pin" />
+            <p>{t('map.consent')}</p>
+            <div class="flex flex-wrap gap-2 justify-center">
+              <button type="button" class="btn btn-outline" data-map-load>{t('map.load')}</button>
+              <a class="btn btn-outline" href={mapsUrl()} target="_blank" rel="noopener"><Icon name="route" />{t('map.open')}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="kontakt" class="section" aria-labelledby="contact-title">
+  <div class="container-x">
+    <div class="cta-panel reveal">
+      <h2 id="contact-title">{t('contact.title')}</h2>
+      <p>{t('contact.text')}</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href={whatsappHref()} data-reserve><Icon name="whatsapp" />{t('action.reserve')}</a>
+        <a class="btn btn-ghost" href={telHref(site.phone)}><Icon name="phone" />{site.phone}</a>
+      </div>
+      <div class="contact-list">
+        {site.email && <a href={`mailto:${site.email}`} class="inline-flex items-center gap-1.5"><Icon name="mail" class="w-4 h-4" />{site.email}</a>}
+        {site.instagram && <a href={site.instagram} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5"><Icon name="instagram" class="w-4 h-4" />Instagram</a>}
+        {site.facebook && <a href={site.facebook} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5"><Icon name="facebook" class="w-4 h-4" />Facebook</a>}
+        {site.googleReviewUrl && <a href={site.googleReviewUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5"><Icon name="star" class="w-4 h-4" />{t('action.review')}</a>}
+      </div>
+    </div>
+  </div>
+</section>

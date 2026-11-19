@@ -1,0 +1,89 @@
+{
+  "name": "Fischgerichte",
+  "name_en": "Fish dishes",
+  "name_nl": "Visgerechten",
+  "order": 90,
+  "hidden": false,
+  "kind": "food",
+  "image": "/src/assets/images/categories/fischgerichte/image.jpg",
+  "note": "",
+  "note_en": "",
+  "note_nl": "",
+  "dishes": [
+    {
+      "name": "Forelle Müllerin",
+      "description": "Ganze Forelle mit Grillgemüse und Petersilienkartoffeln",
+      "name_en": "Trout Meunière",
+      "description_en": "Whole trout with grilled vegetables and parsley potatoes",
+      "name_nl": "Forel meunière",
+      "description_nl": "Hele forel met gegrilde groenten en peterselieaardappelen",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "24,00",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "A",
+        "D",
+        "G"
+      ],
+      "tags": [],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/fischgerichte/dishes/0/image.jpeg"
+    },
+    {
+      "name": "Lachsfilet",
+      "description": "Mit Petersilienkartoffeln, Blattspinat und Weißweinsauce",
+      "name_en": "Salmon Fillet",
+      "description_en": "With parsley potatoes, leaf spinach and white wine sauce",
+      "name_nl": "Zalmfilet",
+      "description_nl": "Met peterselieaardappelen, bladspinazie en wittewijnsaus",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "21,00",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "A",
+        "D",
+        "G"
+      ],
+      "tags": [],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/fischgerichte/dishes/1/image.jpeg"
+    },
+    {
+      "name": "Gegrillte Scampi-Spieße",
+      "description": "Mit Pommes oder Reis, Salat und Tzatziki",
+      "name_en": "Grilled Scampi Skewers",
+      "description_en": "With fries or rice, salad and tzatziki",
+      "name_nl": "Gegrilde scampispiesjes",
+      "description_nl": "Met friet of rijst, salade en tzatziki",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "24,90",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "A",
+        "D",
+        "G"
+      ],
+      "tags": [],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/fischgerichte/dishes/2/image.jpeg"
+    }
+  ]
+}

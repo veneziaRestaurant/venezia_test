@@ -1,0 +1,31 @@
+---
+/**
+ * 3D-/AR-Ansicht eines Gerichts. Der 3D-Viewer (Google <model-viewer>) wird erst geladen,
+ * wenn jemand auf „Auf dem Tisch ansehen“ tippt – die Seite bleibt dadurch schnell.
+ * Handy: Button öffnet die Kamera (Android: Scene Viewer/WebXR, iPhone: AR Quick Look).
+ * Desktop: drehbare 3D-Vorschau.
+ */
+import Icon from './Icon.astro';
+import { useT, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+<dialog class="dialog ar-dialog" id="ar-dialog" aria-labelledby="ar-title">
+  <div class="dialog-head">
+    <div>
+      <p class="ar-kicker"><Icon name="ar" />{t('ar.title')}</p>
+      <h2 id="ar-title" data-ar-title></h2>
+    </div>
+    <form method="dialog"><button class="icon-btn" aria-label={t('form.close')}><Icon name="x" /></button></form>
+  </div>
+  <div class="ar-stage" data-ar-stage>
+    <span class="ar-loading" aria-hidden="true"></span>
+  </div>
+  <div class="ar-foot">
+    <button type="button" class="btn btn-primary ar-place" data-ar-place hidden><Icon name="ar" />{t('ar.place')}</button>
+    <p class="ar-hint" data-ar-hint-mobile hidden>{t('ar.hint')}</p>
+    <p class="ar-hint" data-ar-hint-desktop hidden>{t('ar.desktop')}</p>
+    <p class="ar-note" data-ar-note>{t('ar.note')}</p>
+  </div>
+</dialog>

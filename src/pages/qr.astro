@@ -1,0 +1,49 @@
+---
+/** Druckfertiger QR-Code (Tischaufsteller A6/A5). Wird beim Build aus der URL in site.json erzeugt. */
+import { withBase, absUrl } from '../lib/paths';
+import QRCode from 'qrcode';
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import { site, resolveImage, whatsappHref } from '../lib/content';
+
+const target = absUrl('/', site.url);
+const qrSvg = await QRCode.toString(target, { type: 'svg', errorCorrectionLevel: 'M', margin: 1, color: { dark: '#1a0f08', light: '#ffffff' } });
+const reserveSvg = await QRCode.toString(whatsappHref(), { type: 'svg', errorCorrectionLevel: 'M', margin: 1, color: { dark: '#1a0f08', light: '#ffffff' } });
+const logo = resolveImage(site.logo);
+---
+<Layout lang="de" title={`QR-Code – ${site.name}`} description="QR-Code zur digitalen Speisekarte" noindex>
+  <style>
+    .qr-page { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: var(--bg-alt); }
+    .qr-sheet { background: #fff; color: #1a0f08; width: min(100%, 520px); border-radius: 20px; padding: 36px 28px; text-align: center; box-shadow: var(--shadow); }
+    .qr-sheet h1 { font-size: 2.6rem; margin-top: 14px; }
+    .qr-code { width: min(100%, 300px); margin: 18px auto 8px; }
+    .qr-code :global(svg) { width: 100%; height: auto; display: block; }
+    .qr-small { display: flex; align-items: center; gap: 14px; justify-content: center; margin-top: 22px; padding-top: 18px; border-top: 1px dashed #d8ccb8; text-align: start; font-size: .9rem; }
+    .qr-small div { width: 92px; flex: none; }
+    .qr-small :global(svg) { width: 100%; height: auto; display: block; }
+    .actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+    @media print {
+      @page { size: A5; margin: 10mm; }
+      .qr-page { background: #fff; min-height: 0; padding: 0; }
+      .qr-sheet { box-shadow: none; border: 0; }
+      .actions { display: none; }
+    }
+  </style>
+  <main class="qr-page">
+    <div class="qr-sheet">
+      {logo && <Image src={logo} alt={site.name} width={260} style="margin:auto" />}
+      <h1>Speisekarte</h1>
+      <p>Menu · Menukaart</p>
+      <div class="qr-code" set:html={qrSvg} role="img" aria-label={`QR-Code zu ${target}`}></div>
+      <p style="font-size:.85rem;color:#6b5848">{target.replace(/^https?:\/\//, '').replace(/\/$/, '')}</p>
+      <div class="qr-small">
+        <div set:html={reserveSvg} role="img" aria-label="QR-Code zur WhatsApp-Reservierung"></div>
+        <p><strong>Tisch reservieren</strong><br />Scannen &amp; per WhatsApp schreiben</p>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="window.print()">Drucken</button>
+        <a class="btn btn-outline" href={withBase("/")}>Zur Webseite</a>
+      </div>
+    </div>
+  </main>
+</Layout>

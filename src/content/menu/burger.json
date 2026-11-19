@@ -1,0 +1,112 @@
+{
+  "name": "Burger",
+  "name_en": "Burgers",
+  "name_nl": "Burgers",
+  "order": 60,
+  "hidden": false,
+  "kind": "food",
+  "image": "/src/assets/images/categories/burger/image.jpg",
+  "note": "",
+  "note_en": "",
+  "note_nl": "",
+  "dishes": [
+    {
+      "name": "Crunchy Chicken Burger",
+      "description": "Hühnerfleisch, Pommes, Tomaten, Salat, Zwiebel, Ketchup und Mayonnaise",
+      "name_en": "Crunchy Chicken Burger",
+      "description_en": "Chicken, fries, tomatoes, lettuce, onion, ketchup and mayonnaise",
+      "name_nl": "Crunchy kipburger",
+      "description_nl": "Kip, friet, tomaten, sla, ui, ketchup en mayonaise",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "15,80",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "L",
+        "M"
+      ],
+      "tags": [],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/burger/dishes/0/image.jpeg"
+    },
+    {
+      "name": "Cheeseburger",
+      "description": "Mit Pommes, Tomaten, Salat, Zwiebel, Ketchup und Mayonnaise",
+      "name_en": "Cheeseburger",
+      "description_en": "With fries, tomatoes, lettuce, onion, ketchup and mayonnaise",
+      "name_nl": "Cheeseburger",
+      "description_nl": "Met friet, tomaten, sla, ui, ketchup en mayonaise",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "16,90",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "L",
+        "M"
+      ],
+      "tags": [],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/burger/dishes/1/image.jpg"
+    },
+    {
+      "name": "Hamburger",
+      "description": "Mit Pommes, Tomaten, Salat, Zwiebel, Ketchup und Mayonnaise",
+      "name_en": "Hamburger",
+      "description_en": "With fries, tomatoes, lettuce, onion, ketchup and mayonnaise",
+      "name_nl": "Hamburger",
+      "description_nl": "Met friet, tomaten, sla, ui, ketchup en mayonaise",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "15,20",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "L",
+        "M"
+      ],
+      "tags": [],
+      "recommended": false,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/burger/dishes/2/image.jpg"
+    },
+    {
+      "name": "Venezia Burger",
+      "description": "Mit Pommes, Speck, Jalapeños, Tomaten, Salat, Zwiebel, Ketchup und Mayonnaise",
+      "name_en": "Venezia Burger",
+      "description_en": "With fries, bacon, jalapeños, tomatoes, lettuce, onion, ketchup and mayonnaise",
+      "name_nl": "Venezia burger",
+      "description_nl": "Met friet, spek, jalapeños, tomaten, sla, ui, ketchup en mayonaise",
+      "group": "",
+      "group_en": "",
+      "group_nl": "",
+      "price": "17,90",
+      "size": "",
+      "price2": "",
+      "size2": "",
+      "allergens": [
+        "L",
+        "M"
+      ],
+      "tags": [
+        "spicy"
+      ],
+      "recommended": true,
+      "soldOut": false,
+      "hidden": false,
+      "image": "/src/assets/images/dishes/burger/dishes/3/image.jpeg"
+    }
+  ]
+}
