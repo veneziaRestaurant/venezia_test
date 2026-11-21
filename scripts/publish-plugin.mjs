@@ -2,15 +2,15 @@
  * Nur lokal (npm run admin): kleine Schnittstelle für den Button „نشر على الإنترنت" in der Admin-Oberfläche.
  *
  *   GET  /__venezia/status          → Anzahl ungespeicherter/unveröffentlichter Änderungen
- *   POST /__venezia/publish         → git add (nur Inhalte & Bilder) + commit + pull --rebase + push
+ *   POST /__venezia/publish         → git add (nur Inhalte, Bilder & 3D-Scans) + commit + pull --rebase + push
  *   GET  /__venezia/deploy?sha=…    → Stand des GitHub-Pages-Builds für diesen Commit (öffentliche GitHub-API)
  *
- * Es werden ausschließlich src/content und src/assets/images veröffentlicht – Code-Änderungen bleiben unberührt.
+ * Es werden ausschließlich src/content, src/assets/images und public/ar/scans (3D-Scans) veröffentlicht – Code-Änderungen bleiben unberührt.
  */
 import { execFile } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
-const CONTENT_PATHS = ['src/content', 'src/assets/images'];
+const CONTENT_PATHS = ['src/content', 'src/assets/images', 'public/ar/scans'];
 
 function git(args, cwd) {
   return new Promise((resolve, reject) => {

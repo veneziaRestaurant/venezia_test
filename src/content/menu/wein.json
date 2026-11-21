@@ -342,7 +342,6 @@
     {
       "name": "Hauswein rosé",
       "image": "/src/assets/images/dishes/wein/dishes/18/image.jpg",
-      "model3d": "/ar/scans/wein/dishes/18/model3d.jpg",
       "price": "28,90",
       "size": "0,75 l",
       "allergens": [
