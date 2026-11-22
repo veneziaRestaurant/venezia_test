@@ -14,6 +14,7 @@
       "name": "Margherita",
       "description": "Tomatensauce und Mozzarella",
       "image": "/src/assets/images/dishes/pizza/dishes/0/image.jpeg",
+      "model3d": "/ar/scans/pizza/dishes/0/model3d.glb",
       "price": "10,90",
       "allergens": [
         "A",
